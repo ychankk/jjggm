@@ -38,7 +38,5 @@ key_t get_key(void) {
 	else {
 		return K_UNDEFINED;
 	}
-
-	//test1
-
+	//test test
 }
