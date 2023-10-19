@@ -39,3 +39,5 @@ key_t get_key(void) {
 		return K_UNDEFINED;
 	}
 }
+
+// test
