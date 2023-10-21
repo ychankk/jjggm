@@ -1,3 +1,5 @@
+// 키 입력과 관계된 코드
+
 #include <conio.h>
 #include <stdbool.h>
 #include "keyin.h"

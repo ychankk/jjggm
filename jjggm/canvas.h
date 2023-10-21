@@ -1,3 +1,6 @@
+#pragma once
+// 화면 출력과 관계된 코드
+
 #ifndef _CIO_H_
 #define _CIO_H_
 
@@ -6,6 +9,7 @@
 // 화면 크기(맵 크기x. 맵 + 상태창)
 #define ROW_MAX		40
 #define COL_MAX		80
+
 
 // 더블 버퍼링
 // back_buf[][]가 맵이고, 

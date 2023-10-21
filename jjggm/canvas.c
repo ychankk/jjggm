@@ -1,10 +1,12 @@
+// 화면 출력과 관계된 코드
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <Windows.h>
 #include "jjuggumi.h"
 #include "canvas.h"
 
-#define DIALOG_DURATION_SEC		4
+#define DIALOG_DURATION_SEC		2
 
 void draw(void);
 void print_status(void);
@@ -19,6 +21,11 @@ void gotoxy(int row, int col) {
 void printxy(char ch, int row, int col) {
 	gotoxy(row, col);
 	printf("%c", ch);
+}
+
+void printxy_str(char* ch, int row, int col) {
+	gotoxy(row, col);
+	printf("%s", ch);
 }
 
 void map_init(int n_row, int n_col) {
@@ -70,12 +77,79 @@ void draw(void) {
 }
 
 void print_status(void) {
-	printf("no. of players left: %d\n", n_alive);
+	printf("no. of players left: %d   \n", n_alive);
 	for (int p = 0; p < n_player; p++) {
 		printf("player %2d: %5s\n", p, player[p] ? "alive" : "DEAD");
 	}
 }
 
 void dialog(char message[]) {
+	int temp_time = DIALOG_DURATION_SEC;
+	char temp_time_char[5] = { 0,0,0,0,0 };
+	int message_len = strlen(message);
+	int x, y;
+	while (1) {
+
+		if (temp_time == 0) break;
+
+		for (int i = 0; i < message_len + 4; i++) {
+			x = N_ROW / 2 - 1;
+			y = N_COL / 2 - message_len / 2 - 2 + i;
+			if (placable(x, y)) back_buf[x][y] = '*';
+		}
+
+		x = N_ROW / 2; y = N_COL / 2 - message_len / 2 - 2;
+		if (placable(x, y)) back_buf[x][y] = '*';
+		x = N_ROW / 2; y = N_COL / 2 - message_len / 2 - 1;
+		if (temp_time == DIALOG_DURATION_SEC) back_buf[x][y] = temp_time + '0';
+		else if (back_buf[x][y] == ((temp_time + 1) + '0')) back_buf[x][y] = temp_time + '0';
+		x = N_ROW / 2; y = N_COL / 2 + message_len / 2 + 1;
+		if (placable(x, y)) back_buf[x][y] = '*';
+
+		for (int i = 0; i < message_len; i++) { // 메시지 넣기
+			x = N_ROW / 2;
+			y = N_COL / 2 - message_len / 2 + 1 + i;
+			if (placable(x, y)) back_buf[x][y] = message[i];
+		}
+		for (int i = 0; i < message_len + 4; i++) {
+			x = N_ROW / 2 + 1;
+			y = N_COL / 2 - message_len / 2 - 2 + i;
+			if (placable(x, y)) back_buf[x][y] = '*';
+		}
+
+
+
+		display();
+		Sleep(1000);
+
+		temp_time -= 1;
+	}
+
+	for (int i = 0; i < message_len + 4; i++) {
+		x = N_ROW / 2 - 1;
+		y = N_COL / 2 - message_len / 2 - 2 + i;
+		if (back_buf[x][y] == '*') back_buf[x][y] = ' ';
+	}
+
+	x = N_ROW / 2; y = N_COL / 2 - message_len / 2 - 2;
+	if (back_buf[x][y] == '*') back_buf[x][y] = ' ';
+	x = N_ROW / 2; y = N_COL / 2 - message_len / 2 - 1;
+	if (back_buf[x][y] == ((temp_time + 1) + '0')) back_buf[x][y] = ' ';
+	x = N_ROW / 2; y = N_COL / 2 + message_len / 2 + 1;
+	if (back_buf[x][y] == '*') back_buf[x][y] = ' ';
+
+	for (int i = 0; i < message_len; i++) { // 메시지 넣기
+		x = N_ROW / 2;
+		y = N_COL / 2 - message_len / 2 + 1 + i;
+		if (back_buf[x][y] == message[i]) back_buf[x][y] = ' ';
+	}
+	for (int i = 0; i < message_len + 4; i++) {
+		x = N_ROW / 2 + 1;
+		y = N_COL / 2 - message_len / 2 - 2 + i;
+		if (back_buf[x][y] == '*') back_buf[x][y] = ' ';
+	}
+
 
 }
+
+
